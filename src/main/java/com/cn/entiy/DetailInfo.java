@@ -73,6 +73,12 @@ public class DetailInfo implements Serializable {
     private String detailIsPublic;
 
     /**
+     * 细目的级别  1 普通内容（初级）  2 高级内容
+     */
+    @Column(name = "CONTENT_LEVEL", length = 2)
+    private String contentLevel;
+
+    /**
      * 直播码  url
      */
     @Column(name = "DETAIL_ZBCODE", length = 100)
@@ -223,5 +229,13 @@ public class DetailInfo implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getContentLevel() {
+        return contentLevel;
+    }
+
+    public void setContentLevel(String contentLevel) {
+        this.contentLevel = contentLevel;
     }
 }

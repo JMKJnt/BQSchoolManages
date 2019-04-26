@@ -166,6 +166,22 @@ public class ClassInfoController {
         }
         return result.toString();
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/getClassImg", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String getClassImg(@RequestBody RequestBean bean) {
+        LogHelper.info("获取分享班级二维码 请求参数：" + bean.getJsonStr());
+        JSONObject result = new JSONObject();
+        try {
+            result = classInfoService.getClassImg(bean.getJsonStr().toString());
+        } catch (Exception e) {
+            result.put(MsgAndCode.RSP_CODE, MsgAndCode.CODE_002);
+            result.put(MsgAndCode.RSP_DESC, MsgAndCode.CODE_002_MSG);
+            e.printStackTrace();
+        }
+        return result.toString();
+    }
+
     /**
      * 新增学生
      *

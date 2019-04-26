@@ -63,6 +63,14 @@ public interface ClassInfoService {
     public JSONObject deleteStudentById(String jsonstr);
 
     public JSONObject updateClassTeacher(String jsonstr);
+
+    /**
+     * 获取班级二维码
+     * @param jsonstr
+     * @return
+     */
+    public JSONObject getClassImg(String jsonstr);
+
     //新增学生
     public JSONObject insertStudent(String jsonstr);
 

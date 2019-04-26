@@ -63,10 +63,40 @@ public class RegisterInfo implements Serializable {
     private String registerUserName;
 
     /**
+     * 报名用户E-mail
+     */
+    @Column(name = "USER_EMAIL", length = 100)
+    private String userEmail;
+
+    /**
      * 报名时间
      */
     @Column(name = "REGISTER_TIME")
     private Date registerTime;
+
+    /**
+     * 报名此活动对应的级别  1 普通内容（初级）  2 高级内容
+     */
+    @Column(name = "CONTENT_LEVEL", length = 2)
+    private String contentLevel;
+
+    /**
+     * 报名活动的 编码
+     * 生成规则：适用年级编号（1位 活动表里有）+ 初高级编号（1 位 界面上会传）+ 期数编号（4位 活动表里有）+ 老师编号 （8位 用户表里32位id改装成8位短id）
+     * 如：321892Gfjqh8nX
+     * 解释：适合三年级 高级活动 第1892期 xx老师报名参加
+     */
+    @Column(name = "REGISTER_NUM", length = 50)
+    private String registerNum;
+
+    /**
+     * 码表关联 纵向扩展
+     * 1 是否为学生意愿              0否 1是
+     * 2 是否在班级长期开展类似活动   0否 1是
+     * 3 是否参加过类似活动          0否 1是
+     */
+    @Column(name = "DICTIONARY_KEY", length = 100)
+    private String dictionaryKey;
 
     /**
      * 活动参与状态 1 已参加，2 进行中，3未参加，4已过期
@@ -85,6 +115,8 @@ public class RegisterInfo implements Serializable {
      */
     @Column(name = "REGISTER_APPROVE_NAME", length = 100)
     private String registerApproveName;
+
+
 
     /**
      * 备注
@@ -261,5 +293,37 @@ public class RegisterInfo implements Serializable {
 
     public void setSchoolId(String schoolId) {
         this.schoolId = schoolId;
+    }
+
+    public String getContentLevel() {
+        return contentLevel;
+    }
+
+    public void setContentLevel(String contentLevel) {
+        this.contentLevel = contentLevel;
+    }
+
+    public String getDictionaryKey() {
+        return dictionaryKey;
+    }
+
+    public void setDictionaryKey(String dictionaryKey) {
+        this.dictionaryKey = dictionaryKey;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getRegisterNum() {
+        return registerNum;
+    }
+
+    public void setRegisterNum(String registerNum) {
+        this.registerNum = registerNum;
     }
 }

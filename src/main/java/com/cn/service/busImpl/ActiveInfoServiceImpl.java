@@ -47,6 +47,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
         JSONObject jo = new JSONObject(jsonstr);
 //        String activeType = jo.getString("activeType");//活动类型 （1 线上 2 线下）
         String activeName = jo.getString("activeName");//活动名称
+        String activityHase = jo.getString("activityHase");//期
         String activeBanner = jo.has("activeBanner") ? jo.getString("activeBanner") : "";//活动banner图
         String activeTheme = jo.getString("activeTheme");//活动主题
         String activeDetail = jo.getString("activeDetail");//活动详情
@@ -70,12 +71,12 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
         String activityTemplate = jo.has("activityTemplate") ? jo.getString("activityTemplate") : "";
         String activeHeadStr = jo.has("activeHeadStr") ? jo.getString("activeHeadStr") : "";
         JSONArray detailList = jo.getJSONArray("detailList");//活动细目
-        //新增活动信息，再新增活动参与导师信息
+        //新增活动信息，再新增活动参与导师信息 activityHase
         if (Utils.isEmpty(activeCate) || Utils.isEmpty(activeName) || Utils.isEmpty(activeTheme) ||
                 Utils.isEmpty(activeDetail) || Utils.isEmpty(activeClassNum) || Utils.isEmpty(signStartTime)
                 || Utils.isEmpty(signEndTime) || Utils.isEmpty(activeIsApprove) || Utils.isEmpty(activeCreate)
                 || Utils.isEmpty(status) || Utils.isEmpty(activeIsQuestion) || Utils.isEmpty(activeSeq)
-                || Utils.isEmpty(activeNumCy) || detailList == null || detailList.length() <= 0) {
+                || Utils.isEmpty(activeNumCy) || Utils.isEmpty(activityHase) || detailList == null || detailList.length() <= 0) {
             result.put(MsgAndCode.RSP_CODE, MsgAndCode.CODE_001);
             result.put(MsgAndCode.RSP_DESC, MsgAndCode.CODE_001_MSG);
             return result;
@@ -84,6 +85,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                 //保存活动信息
                 ActivityInfo activityInfo = new ActivityInfo();
                 activityInfo.setActivityName(activeName);
+                activityInfo.setActivityHase(activityHase);
                 activityInfo.setActivityBanner(activeBanner);
                 activityInfo.setActivityCate(activeCate);
                 activityInfo.setActivityTheme(activeTheme);
@@ -152,6 +154,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
 //        String activeType = jo.getString("activeType");//活动类型 （1 线上 2 线下）
         String activeCate = jo.getString("activeCate");//类别  单选
         String activeName = jo.getString("activeName");//活动名称
+        String activityHase = jo.getString("activityHase");//期
         String activeBanner = jo.has("activeBanner") ? jo.getString("activeBanner") : "";//活动banner图
         String activeTheme = jo.getString("activeTheme");//活动主题
         String activeDetail = jo.getString("activeDetail");//活动详情
@@ -174,7 +177,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
         JSONArray detailList = jo.getJSONArray("detailList");//活动细目
         String activityTemplate = jo.has("activityTemplate") ? jo.getString("activityTemplate") : "";
         //新增活动信息，再新增活动参与导师信息
-        if (Utils.isEmpty(activeCate) || Utils.isEmpty(activeName) || Utils.isEmpty(activeTheme) ||
+        if (Utils.isEmpty(activeCate) || Utils.isEmpty(activeName) || Utils.isEmpty(activityHase) || Utils.isEmpty(activeTheme) ||
                 Utils.isEmpty(activeDetail) || Utils.isEmpty(signStartTime) || Utils.isEmpty(signEndTime)
                 || Utils.isEmpty(activeIsApprove) || Utils.isEmpty(activeUpdate) || Utils.isEmpty(activeId)
                 || Utils.isEmpty(status) || Utils.isEmpty(activeIsQuestion) || Utils.isEmpty(activeNumCy)
@@ -189,6 +192,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                 ActivityInfo activityInfo = baseEntityDao.listById(ActivityInfo.class, activeId, false);
                 activityInfo = activityInfo == null ? new ActivityInfo() : activityInfo;
                 activityInfo.setActivityName(activeName);
+                activityInfo.setActivityHase(activityHase);
                 activityInfo.setActivityBanner(activeBanner);
                 activityInfo.setActivityCate(activeCate);
                 activityInfo.setActivityTheme(activeTheme);
@@ -244,7 +248,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
     }
 
     /**
-     * 获取活动信息
+     * 获取活动信息-根据活动id
      *
      * @param jsonstr
      * @return
@@ -270,6 +274,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                     result.put("activeId", activityInfo.getActivityId());
                     result.put("activeNum", activityInfo.getActivityCode());
                     result.put("activeName", activityInfo.getActivityName());
+                    result.put("activityHase", activityInfo.getActivityHase());
                     result.put("activeBanner", activityInfo.getActivityBanner());
 //                    result.put("activeType", activityInfo.getActivityType());
                     result.put("activeCate", activityInfo.getActivityCate());
@@ -340,7 +345,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
 
     /**
      * 获取活动列表
-     *
+     * 多条件查询
      * @param jsonstr
      * @return
      */
@@ -351,6 +356,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
 //        String activeType = jo.has("activeType") ? jo.getString("activeType") : "";//活动类型 （"" 全部 1 线上 2 线下）
         String activeCate = jo.has("activeCate") ? jo.getString("activeCate") : "";//活动类型 （"" 全部 1 线上 2 线下）
         String activeName = jo.has("activeName") ? jo.getString("activeName") : "";//活动名称
+        String activityHase = jo.has("activityHase") ? jo.getString("activityHase") : "";//活动名称
         String activeTheme = jo.has("activeTheme") ? jo.getString("activeTheme") : "";//活动主题
 //        String activeApplicableRole = jo.has("activeApplicableRole") ? jo.getString("activeApplicableRole") : "";//活动适用角色 （1,2,3）
         String activeClassNum = jo.has("activeClassNum") ? jo.getString("activeClassNum") : "";//活动适用年级 （1,2,3,4,5,6）
@@ -383,6 +389,9 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                 }
                 if (!activeName.equals("")) {
                     strCommon.append(" AND A.ACTIVITY_NAME LIKE '%" + activeName + "%'");
+                }
+                if (!activityHase.equals("")) {
+                    strCommon.append(" AND A.ACTIVITY_HASE = '" + activityHase + "'");
                 }
                 if (!activeTheme.equals("")) {
                     strCommon.append(" AND A.ACTIVITY_THEME LIKE '%" + activeTheme + "%'");
@@ -421,7 +430,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                 strCount.append(strCommon.toString());
                 int total = baseEntityDao.CountBySQL(strCount.toString());
 
-                StringBuffer sql = new StringBuffer("SELECT A.ACTIVITY_ID,A.ACTIVITY_NAME,A.ACTIVITY_BANNER,A.ACTIVITY_CATE,A.ACTIVITY_THEME,");
+                StringBuffer sql = new StringBuffer("SELECT A.ACTIVITY_ID,A.ACTIVITY_NAME,A.ACTIVITY_HASE,A.ACTIVITY_BANNER,A.ACTIVITY_CATE,A.ACTIVITY_THEME,");
                 sql.append(" A.ACTIVITY_DETAIL,A.ACTIVITY_CODE ,A.ACTIVITY_CLASS_NUM,A.ACTIVITY_STARTTIME,A.ACTIVITY_ENDTIME,A.ACTIVITY_SGIN_STARTTIME,");
                 sql.append(" A.ACTIVITY_SGIN_ENDTIME,A.ACTIVITY_STATUS,A.ACTIVITY_ISAPPROVE,A.ACTIVITY_ISQUESTION,A.ACTIVITY_CREATENAME,");
                 sql.append(" A.ACTIVITY_UPDATENAME,A.STATUS,A.ACTIVITY_NUMCY,A.ACTIVITY_SEQ FROM ACTIVITY_INFO A WHERE 1=1");
@@ -446,6 +455,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                         job.put("activeId", map.get("ACTIVITY_ID").toString());
                         job.put("activeNum", map.get("ACTIVITY_CODE") == null ? "" : map.get("ACTIVITY_CODE").toString());
                         job.put("activeName", map.get("ACTIVITY_NAME").toString());
+                        job.put("activityHase", map.get("ACTIVITY_HASE").toString());
                         job.put("activeBanner", map.get("ACTIVITY_BANNER").toString());
                         job.put("activeCate", map.get("ACTIVITY_CATE").toString());
                         job.put("activeTheme", map.get("ACTIVITY_THEME").toString());
@@ -502,7 +512,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
 
     /**
      * 获取活动列表
-     *
+     * 客户端专用
      * @param jsonstr
      * @return
      */
@@ -585,10 +595,16 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
         }
         return result;
     }
+    /**
+     * ------------------------分割线--用户与活动---------------------------------------------------------------------
+     */
 
     /**
      * 获取活动报名信息列表
+     * 多条件检索 用户已报名的活动列表
      *
+     * 老师-个人中心-我的活动
+     * 用户-个人中心-我的活动
      * @param jsonstr
      * @return
      */
@@ -617,6 +633,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
             result.put(MsgAndCode.RSP_DESC, MsgAndCode.CODE_001_MSG);
             return result;
         } else {
+            //todo 根据活动ID查 查报名活动 获取其 级别 初级 高级
             try {
                 //根据条件查询列表
                 StringBuffer sqlC = new StringBuffer("SELECT COUNT(*) SUM FROM ACTIVITY_REGISTER_INFO AR LEFT JOIN ACTIVITY_INFO AI ");
@@ -656,7 +673,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                 int total = baseEntityDao.CountBySQL(sqlC.toString());
 
                 StringBuffer sqlL = new StringBuffer("SELECT AI.ACTIVITY_ID,AI.ACTIVITY_ZBCODE,AR.REGISTER_ID,AI.ACTIVITY_TYPE,AI.ACTIVITY_NAME,AI.ACTIVITY_THEME,AI.ACTIVITY_BANNER,AI.ACTIVITY_APPLICABLE_ROLE,");
-                sqlL.append("AR.REGISTER_TIME,AR.REGISTER_PROGRESS_STATUS,AI.ACTIVITY_STARTTIME,AI.ACTIVITY_ENDTIME,AI.ACTIVITY_SGIN_STARTTIME,AI.ACTIVITY_SGIN_ENDTIME,AI.ACTIVITY_STATUS,(SELECT D.DATA_NAME FROM DATA_VALUE D WHERE ");
+                sqlL.append(" AR.USER_EMAIL,AR.CONTENT_LEVEL,AR.REGISTER_NUM,AR.REGISTER_TIME,AR.REGISTER_PROGRESS_STATUS,AI.ACTIVITY_STARTTIME,AI.ACTIVITY_ENDTIME,AI.ACTIVITY_SGIN_STARTTIME,AI.ACTIVITY_SGIN_ENDTIME,AI.ACTIVITY_STATUS,(SELECT D.DATA_NAME FROM DATA_VALUE D WHERE ");
                 sqlL.append(" D.DATA_CODE = AI.ACTIVITY_STATUS AND D.DATA_DICTIONARY = ( SELECT DT.DICTIONARY_ID FROM DATA_DICTIONARY DT WHERE ");
                 sqlL.append(" DT.DICTIONARY_CODE = 'activeStatus')) AS ACTIVITY_STATUS_NAME,AI.ACTIVITY_CREATENAME,AI.ACTIVITY_UPDATENAME,U.USER_ID,");
                 sqlL.append(" U.USER_NAME,U.USER_PHONE,U.USER_ROLETYPE,AR.REGISTER_APPROVE_STATUS,AR.REGISTER_SOURCE,(SELECT D.DATA_NAME FROM DATA_VALUE D");
@@ -710,6 +727,9 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                         job.put("registerProgressStatus", map.get("REGISTER_PROGRESS_STATUS").toString());
 //                        job.put("activeApplicableRole", map.get("ACTIVITY_APPLICABLE_ROLE").toString());
                         job.put("registerTime", map.get("REGISTER_TIME").toString());
+//                        job.put("userEmail", map.get("USER_EMAIL").toString());
+                        job.put("contentLevel", map.get("CONTENT_LEVEL").toString());
+                        job.put("registerNum", map.get("REGISTER_NUM").toString());
 //                        job.put("activeStartTime", map.get("ACTIVITY_STARTTIME").toString());
 //                        job.put("activeEndTime", map.get("ACTIVITY_ENDTIME").toString());
                         job.put("signStartTime", map.get("ACTIVITY_SGIN_STARTTIME").toString());
@@ -762,13 +782,18 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
         String registerSource = jo.getString("registerSource");//报名来源（1 web 2 微信 0 全部）
         String userPhone = jo.getString("userPhone");//用户电话
         String userName = jo.getString("userName");//用户名称
+        String email=jo.has("email")?jo.getString("email"):"";
+        String activityHase=jo.has("activityHase")?jo.getString("activityHase"):"";// 活动期数 第1999期：1999 第3期：0003
+        String activityClassNum=jo.has("activityClassNum")?jo.getString("activityClassNum"):"";// 适用年级 0 1 2 3 4 5 表示 1-6年级
+        String contentLevel=jo.has("contentLevel")?jo.getString("contentLevel"):"";// 用户参加活动需选中的 活动级别（同一活动分 初级和高级） 1初级 2高级
         String classId = jo.has("classId") ? jo.getString("classId") : "";//班级id
         String schoolId=jo.has("schoolId")?jo.getString("schoolId"):"";//学校id
         String openId=jo.has("openId")?jo.getString("openId"):"";//微信openid
-        String email=jo.has("email")?jo.getString("email"):"";
+
         if (Utils.isEmpty(activeId) || Utils.isEmpty(userRole) || Utils.isEmpty(userId) ||
                 Utils.isEmpty(registerSource) || Utils.isEmpty(userPhone) || Utils.isEmpty(userName) ||
-                Utils.isEmpty(classId) ) {
+                Utils.isEmpty(classId) || Utils.isEmpty(contentLevel)  || Utils.isEmpty(activityHase)) {
+            //todo || Utils.isEmpty(activityClassNum) 有待考虑 lzw
             result.put(MsgAndCode.RSP_CODE, MsgAndCode.CODE_001);
             result.put(MsgAndCode.RSP_DESC, MsgAndCode.CODE_001_MSG);
             return result;
@@ -807,6 +832,10 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                             JSONObject obj = null;
                             for (int i = 0; i < list.size(); i++) {
                                 Map<String, Object> map = list.get(i);
+                                //拼装本活动的编号
+                                //生成规则：适用年级编号（1位 活动表里有界面来参）+ 初高级编号（1 位 界面来参）+ 期数编号（4位 活动表里有 界面来参）+ 老师编号 （8位 用户表里32位id改装成8位短id）
+                                String registerNum=activityClassNum+contentLevel+activityHase+Utils.generateShortUuid(map.get("USER_ID").toString());
+
                                 RegisterInfo registerInfoT = new RegisterInfo();
                                 registerInfoT.setRegisterActivityId(activeId);
                                 registerInfoT.setRegisterUserId(map.get("USER_ID").toString());
@@ -814,6 +843,9 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                                 registerInfoT.setRegisterSource(registerSource);
                                 registerInfoT.setRegisterUserPhone(map.get("USER_PHONE").toString());
                                 registerInfoT.setRegisterUserName(map.get("USER_NAME").toString());
+                                registerInfoT.setUserEmail(email);
+                                registerInfoT.setContentLevel(contentLevel);
+                                registerInfoT.setRegisterNum(registerNum);
                                 registerInfoT.setStatus("1");
                                 registerInfoT.setRegisterProgressStatus("1");//未参加 1 已参加，2 进行中，3未参加，4已过期
                                 registerInfoT.setRegisterApproveStatus("3");//待审核  1待审核 2 驳回 3 通过
@@ -852,6 +884,10 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                     cn.add(Restrictions.eq("registerActivityId", activeId));
                     List<RegisterInfo> registerInfoList = baseEntityDao.listByCriteria(RegisterInfo.class, cn, false);
                     if (registerInfoList != null && registerInfoList.size() <= 0) {
+                        //拼装本活动的编号
+                        //生成规则：适用年级编号（1位 活动表里有界面来参）+ 初高级编号（1 位 界面来参）+ 期数编号（4位 活动表里有 界面来参）+ 老师编号 （8位 用户表里32位id改装成8位短id）
+                        String registerNum=activityClassNum+contentLevel+activityHase+Utils.generateShortUuid(userId);
+
                         RegisterInfo registerInfo = new RegisterInfo();
                         registerInfo.setRegisterActivityId(activeId);
                         registerInfo.setRegisterUserId(userId);
@@ -859,6 +895,9 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                         registerInfo.setRegisterSource(registerSource);
                         registerInfo.setRegisterUserPhone(userPhone);
                         registerInfo.setRegisterUserName(userName);
+                        registerInfo.setUserEmail(email);
+                        registerInfo.setContentLevel(contentLevel);
+                        registerInfo.setRegisterNum(registerNum);
                         registerInfo.setStatus("1");
                         registerInfo.setRegisterProgressStatus("1");//未参加 1 已参加，2 进行中，3未参加
                         registerInfo.setRegisterApproveStatus("3");//待审核  1待审核 2 驳回 3 通过
@@ -884,7 +923,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                         }
                         if (resultStr.equals("success")) {
                             //保存成功 返回
-                            result.put("activeNum", activityInfo.getActivityCode());//返回活动编码
+                            result.put("registerNum", registerNum);//返回此用户参加此活动 组装后的 编码
                             result.put("regiterTime", new Date());//返回活动编码
                             result.put("activeName",activityInfo.getActivityName());
                             result.put(MsgAndCode.RSP_CODE, MsgAndCode.SUCCESS_CODE);
@@ -923,6 +962,8 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
         String activeId = jo.getString("activeId");//活动id
         String userId = jo.getString("userId");//用户id
         String userRole = jo.getString("userRole");//用户角色
+        String email=jo.getString("email");
+        String contentLevel=jo.getString("contentLevel");// 用户参加活动需选中的 活动级别（同一活动分 初级和高级） 1初级 2高级
         String activeCreate = jo.getString("activeCreate");//创建人
         String status = jo.getString("status");//状态
         String registerSource = jo.getString("registerSource");//报名来源（1 web 2 微信 0 全部）
@@ -944,6 +985,8 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                 registerInfo.setRegisterSource(registerSource);
                 registerInfo.setRegisterUserPhone(userPhone);
                 registerInfo.setRegisterUserName(userName);
+                if(!Utils.isEmpty(email)){registerInfo.setUserEmail(email);}
+                if(!Utils.isEmpty(contentLevel)){registerInfo.setContentLevel(contentLevel);}
                 registerInfo.setStatus(status);
                 registerInfo.setRegisterProgressStatus("3");//未参加 1 已参加，2 进行中，3未参加，4已过期
                 registerInfo.setRegisterApproveStatus("1");//待审核  1待审核 2 驳回 3 通过
@@ -973,7 +1016,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
     }
 
     /**
-     * 获取报名活动信息
+     * 获取报名活动信息-根据本表ID
      *
      * @param jsonstr
      * @return
@@ -993,6 +1036,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                 StringBuffer sql = new StringBuffer("SELECT AR.REGISTER_ID,AI.ACTIVITY_ID,AI.ACTIVITY_TYPE, AI.ACTIVITY_BANNER,");
                 sql.append(" AI.ACTIVITY_NAME,AI.ACTIVITY_DETAIL,AI.ACTIVITY_THEME,U.USER_ID,U.USER_PHONE,AR.REGISTER_SOURCE,");
                 sql.append(" U.USER_NAME,U.USER_ROLE,AR.REGISTER_TIME,AR.REGISTER_APPROVE_STATUS,AR.REGISTER_PROGRESS_STATUS,");
+                sql.append(" AR.USER_EMAIL,AR.CONTENT_LEVEL,AR.REGISTER_NUM,");
                 sql.append(" AR.STATUS, AI.ACTIVITY_STARTTIME,AI.ACTIVITY_ENDTIME,AR.REGISTER_USERPHONE,AR.REGISTER_USERNAME FROM ACTIVITY_REGISTER_INFO AR");
                 sql.append("  LEFT JOIN ACTIVITY_INFO  AI ON AR.REGISTER_ACTIVITY_ID=AI.ACTIVITY_ID LEFT JOIN");
                 sql.append("  USER_INFO U ON AR.REGISTER_USER_ID=U.USER_ID WHERE AR.REGISTER_ID='" + registerId + "'");
@@ -1009,6 +1053,9 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                     result.put("userId", map.get("USER_ID").toString());
                     result.put("userName", map.get("USER_NAME").toString());
                     result.put("userPhone", map.get("USER_PHONE").toString());
+                    result.put("userEmail", map.get("USER_EMAIL").toString());
+                    result.put("contentLevel", map.get("CONTENT_LEVEL").toString());
+                    result.put("registerNum", map.get("REGISTER_NUM").toString());
                     result.put("registerTime", map.get("REGISTER_TIME").toString());
                     result.put("registerApproveStatus", map.get("REGISTER_APPROVE_STATUS").toString());
                     result.put("registerProgressStatus", map.get("REGISTER_PROGRESS_STATUS").toString());
@@ -1173,6 +1220,9 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
         return result;
     }
 
+    /**
+     * ------------------------分割线--问卷---------------------------------------------------------------------
+     */
     /*
     功能：新增问卷调查
      */
@@ -1248,6 +1298,9 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
         return result;
     }
 
+    /**
+     * ------------------------分割线--活动细目---------------------------------------------------------------------
+     */
 
     /**
      * 新增明细
@@ -1268,12 +1321,13 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
         String detailEndTime = oj.getString("detailEndTime");//sdf.parse
         String detailIsPublic = oj.getString("detailIsPublic");//
         String detailZbcode = oj.getString("detailZbcode");
+        String contentLevel = oj.getString("contentLevel"); //内容级别 ：1 初级  2高级
         String createName = oj.getString("createName");
         String status = oj.getString("status");
         if (Utils.isEmpty(detailCate) || Utils.isEmpty(detailTeacherId) || Utils.isEmpty(detailBanner)
                 || Utils.isEmpty(status) || Utils.isEmpty(detailTheme) || Utils.isEmpty(detailDesc)
                 || Utils.isEmpty(detailStartTime) || Utils.isEmpty(detailEndTime) || Utils.isEmpty(detailIsPublic)
-                || Utils.isEmpty(createName) || Utils.isEmpty(detailZbcode)) {
+                || Utils.isEmpty(createName) || Utils.isEmpty(detailZbcode) || Utils.isEmpty(contentLevel)) {
             result.put(MsgAndCode.RSP_CODE, MsgAndCode.CODE_001);
             result.put(MsgAndCode.RSP_DESC, MsgAndCode.CODE_001_MSG);
             return result;
@@ -1289,6 +1343,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                 detailInfo.setDetailStartTime(sdf.parse(detailStartTime));
                 detailInfo.setDetailEndTime(sdf.parse(detailEndTime));
                 detailInfo.setDetailZbcode(detailZbcode);
+                detailInfo.setContentLevel(contentLevel);
                 detailInfo.setDetailCreateName(createName);
                 detailInfo.setDetailCreateTime(new Date());
                 detailInfo.setDetailUpdateName(createName);
@@ -1331,12 +1386,13 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
         String detailEndTime = oj.getString("detailEndTime");//sdf.parse
         String detailIsPublic = oj.getString("detailIsPublic");//
         String detailZbcode = oj.getString("detailZbcode");
+        String contentLevel = oj.getString("contentLevel"); //内容级别 ：1 初级  2高级;
         String updateName = oj.getString("updateName");
         String status = oj.getString("status");
         if (Utils.isEmpty(detailCate) || Utils.isEmpty(detailTeacherId) || Utils.isEmpty(detailBanner)
                 || Utils.isEmpty(status) || Utils.isEmpty(detailTheme) || Utils.isEmpty(detailDesc)
                 || Utils.isEmpty(detailStartTime) || Utils.isEmpty(detailEndTime) || Utils.isEmpty(detailIsPublic)
-                || Utils.isEmpty(updateName) || Utils.isEmpty(detailId) || Utils.isEmpty(detailZbcode)) {
+                || Utils.isEmpty(updateName) || Utils.isEmpty(detailId) || Utils.isEmpty(detailZbcode) || Utils.isEmpty(contentLevel)) {
             result.put(MsgAndCode.RSP_CODE, MsgAndCode.CODE_001);
             result.put(MsgAndCode.RSP_DESC, MsgAndCode.CODE_001_MSG);
             return result;
@@ -1356,6 +1412,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                     detailInfo.setDetailStartTime(sdf.parse(detailStartTime));
                     detailInfo.setDetailEndTime(sdf.parse(detailEndTime));
                     detailInfo.setDetailZbcode(detailZbcode);
+                    detailInfo.setContentLevel(contentLevel);
                     detailInfo.setDetailUpdateName(updateName);
                     detailInfo.setDetailUpdateTime(new Date());
                     detailInfo.setStatus(status);
@@ -1409,6 +1466,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                     result.put("detailStartTime", detailInfo.getDetailStartTime());
                     result.put("detailEndTime", detailInfo.getDetailEndTime());
                     result.put("detailZbcode", detailInfo.getDetailZbcode());
+                    result.put("contentLevel", detailInfo.getContentLevel());
                     result.put("status", detailInfo.getStatus());
                     result.put(MsgAndCode.RSP_CODE, MsgAndCode.SUCCESS_CODE);
                     result.put(MsgAndCode.RSP_DESC, MsgAndCode.SUCCESS_MESSAGE);
@@ -1424,7 +1482,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
 
     /**
      * 获取明细列表
-     *
+     * 可多种条件组合 获得明细列表
      * @param jsonstr
      * @return
      */
@@ -1481,6 +1539,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                         obj.put("detailIsPublic", detailInfo.getDetailIsPublic());
                         obj.put("detailTheme", detailInfo.getDetailTheme());
                         obj.put("detailTeacherId", detailInfo.getDetailTeacherId());
+                        obj.put("contentLevel", detailInfo.getContentLevel());
                         obj.put("detailStartTime", detailInfo.getDetailStartTime());
                         obj.put("detailEndTime", detailInfo.getDetailEndTime());
                         obj.put("status", detailInfo.getStatus());
@@ -1504,7 +1563,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
 
     /**
      * 获取活动 明细列表
-     *
+     * 根据上级的报名活动id查询出关联的明细列表
      * @param jsonstr
      * @return
      */
@@ -1519,9 +1578,9 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
             return result;
         } else {
             try {
-                StringBuffer sql = new StringBuffer("SELECT D.DETAIL_ID,D.DETAIL_BANNER,D.DETAIL_CATE,D.DETAIL_DESC,D.DETAIL_ENDTIME,D.DETAIL_ISPUBLIC");
+                StringBuffer sql = new StringBuffer("SELECT D.DETAIL_ID,D.DETAIL_BANNER,D.CONTENT_LEVEL,D.DETAIL_CATE,D.DETAIL_DESC,D.DETAIL_ENDTIME,D.DETAIL_ISPUBLIC");
                 sql.append(",D.DETAIL_STARTTIME,D.DETAIL_ZBCODE ,D.DETAIL_THEME,D.DETAIL_TEACHERID FROM DETAIL_INFO D LEFT JOIN ACTIVITY_DETAIL_INFO AD ON D.DETAIL_ID=AD.DETAIL_ID ");
-                sql.append("  WHERE D.STATUS='1' AND AD.ACTIVITY_ID='" + activeId + "'");
+                sql.append("  WHERE D.STATUS='1'  AND AD.ACTIVITY_ID='" + activeId + "'");
                 List<Map<String, Object>> detailInfoList = baseEntityDao.listBySQL(sql.toString(), false);
                 JSONArray lists = new JSONArray();
                 if (detailInfoList != null && detailInfoList.size() > 0) {
@@ -1532,6 +1591,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                         obj.put("detailId", detailInfo.get("DETAIL_ID").toString());
                         obj.put("detailCate", detailInfo.get("DETAIL_CATE").toString());
                         obj.put("detailBanner", detailInfo.get("DETAIL_BANNER").toString());
+                        obj.put("contentLevel", detailInfo.get("CONTENT_LEVEL").toString());
                         obj.put("detailDesc", detailInfo.get("DETAIL_DESC").toString());
                         obj.put("detailIsPublic", detailInfo.get("DETAIL_ISPUBLIC").toString());
                         obj.put("detailTheme", detailInfo.get("DETAIL_THEME").toString());
@@ -1570,7 +1630,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
             return result;
         } else {
             try {
-                StringBuffer sql = new StringBuffer("SELECT D.DETAIL_ID,D.DETAIL_BANNER,D.DETAIL_CATE,D.DETAIL_DESC,D.DETAIL_ENDTIME,D.DETAIL_ISPUBLIC,R.REGISTER_APPROVE_STATUS");
+                StringBuffer sql = new StringBuffer("SELECT D.DETAIL_ID,D.DETAIL_BANNER,D.CONTENT_LEVEL,D.DETAIL_CATE,D.DETAIL_DESC,D.DETAIL_ENDTIME,D.DETAIL_ISPUBLIC,R.REGISTER_APPROVE_STATUS");
                 sql.append(",D.DETAIL_STARTTIME,D.DETAIL_ZBCODE ,D.DETAIL_THEME,D.DETAIL_TEACHERID,R.REGISTER_USER_ID,A.ACTIVITY_ID ,A.ACTIVITY_NAME FROM DETAIL_INFO D ");
                 sql.append(" LEFT JOIN ACTIVITY_DETAIL_INFO AD ON D.DETAIL_ID=AD.DETAIL_ID ");
                 sql.append(" LEFT JOIN ACTIVITY_INFO A ON A.ACTIVITY_ID =AD.ACTIVITY_ID ");
@@ -1586,6 +1646,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                         obj.put("detailId", detailInfo.get("DETAIL_ID").toString());
                         obj.put("detailCate", detailInfo.get("DETAIL_CATE").toString());
                         obj.put("detailBanner", detailInfo.get("DETAIL_BANNER").toString());
+                        obj.put("contentLevel", detailInfo.get("CONTENT_LEVEL").toString());
                         obj.put("detailDesc", detailInfo.get("DETAIL_DESC").toString());
                         obj.put("detailIsPublic", detailInfo.get("DETAIL_ISPUBLIC").toString());
                         obj.put("detailTheme", detailInfo.get("DETAIL_THEME").toString());

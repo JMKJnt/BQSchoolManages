@@ -12,9 +12,13 @@ import org.hibernate.criterion.Restrictions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import javax.imageio.ImageIO;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -347,6 +351,96 @@ public class ClassInfoServiceImpl implements ClassInfoService {
             }
         }
         return result;
+    }
+
+    /**
+     * 获取班级二维码图片
+     * @param jsonstr
+     * @return
+     */
+    public JSONObject getClassImg(String jsonstr) {
+        logger.info("获取班级二维码图片getClassImg--------" + jsonstr);
+        JSONObject result = new JSONObject();
+        JSONObject jo = new JSONObject(jsonstr);
+        String classId = jo.getString("classId");//班级id
+
+        String appid="wx49a3693d35b881c6&secret=b9c8d411483e9ad64e4755246d474c8f";
+        String path = "pages/sweepCodeInto/sweepCodeInto?classId="+classId;
+        if (Utils.isEmpty(appid) || Utils.isEmpty(path) ) {
+            result.put(MsgAndCode.RSP_CODE, MsgAndCode.CODE_001);
+            result.put(MsgAndCode.RSP_DESC, MsgAndCode.CODE_001_MSG);
+            return result;
+        } else {
+            try {
+                String tokenUrl="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+appid;
+                String token=getToken(tokenUrl, HttpMethod.GET,null);
+                String url="https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token="+token;
+                String parameter="{\"path\": \""+path+"\",\"width\": "+"400".toString()+"}";
+                result.put("classImg", getWXAppQRCode(url,HttpMethod.POST,parameter,MediaType.APPLICATION_JSON));
+                result.put(MsgAndCode.RSP_CODE, MsgAndCode.SUCCESS_CODE);
+                result.put(MsgAndCode.RSP_DESC, MsgAndCode.SUCCESS_MESSAGE);
+
+            } catch (Exception e) {
+                result.put(MsgAndCode.RSP_CODE, MsgAndCode.CODE_002);
+                result.put(MsgAndCode.RSP_DESC, MsgAndCode.CODE_002_MSG);
+                e.printStackTrace();
+            }
+        }
+
+        return result;
+    }
+
+    public static void saveImage(byte[] source,String filePath,String format) {
+        InputStream inputStream=null;
+        try{
+            inputStream=new ByteArrayInputStream(source);
+            ImageIO.write(ImageIO.read(inputStream),format,new FileOutputStream(filePath));
+        }
+        catch (Exception ex){
+
+        }
+        finally {
+            if(inputStream != null) {
+                try{
+                    inputStream.close();
+                }catch (IOException ioExc){
+
+                }
+            }
+        }
+    }
+    private static String  getToken(String url, HttpMethod method , String parameter) {
+        try {
+            RestTemplate client = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<String> requestEntity = new HttpEntity<>(parameter, headers);
+            ResponseEntity<Map> response = client.exchange(url, method, requestEntity,Map.class);
+            Map  result = response.getBody();
+            return result.get("access_token").toString();
+        } catch (Exception ex) {
+            System.out.println(ex.getStackTrace());
+            return null;
+        }
+    }
+    private static byte[] getWXAppQRCode(String url,HttpMethod method ,String parameter,MediaType contentType) {
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+        try {
+            RestTemplate client = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            // 以表单的方式提交
+            headers.setContentType(contentType);
+            //将请求头部和参数合成一个请求
+            HttpEntity<String> requestEntity = new HttpEntity<>(parameter, headers);
+            //执行HTTP请求，将返回的结构使用ResultVO类格式化
+            ResponseEntity<byte[]> response = client.exchange(url, method, requestEntity, byte[].class,new Object[0]);
+            byte[]  result = response.getBody();
+            return result;
+        } catch (Exception ex) {
+            System.out.println(ex.getStackTrace());
+            return null;
+        }
     }
 
     /**

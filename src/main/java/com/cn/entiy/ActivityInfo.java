@@ -46,6 +46,13 @@ public class ActivityInfo implements Serializable {
     private String activityName;
 
     /**
+     * 期
+     * 如：第五期活动：0005
+     */
+    @Column(name = "ACTIVITY_HASE", length = 10)
+    private String activityHase;
+
+    /**
      * 活动主题
      */
     @Column(name = "ACTIVITY_THEME", length = 1000)
@@ -151,6 +158,9 @@ public class ActivityInfo implements Serializable {
     @Column(name = "ACTIVITY_NUMCY",length = 100)
     private String activityNumCy;
 
+    /**
+     * 活动号（编号）
+     */
     @Column(name = "ACTIVITY_CODE",length = 50)
     private String activityCode;
     /**
@@ -380,4 +390,11 @@ public class ActivityInfo implements Serializable {
         this.activityTemplate = activityTemplate;
     }
 
+    public String getActivityHase() {
+        return activityHase;
+    }
+
+    public void setActivityHase(String activityHase) {
+        this.activityHase = activityHase;
+    }
 }
