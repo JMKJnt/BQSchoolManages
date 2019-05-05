@@ -81,7 +81,7 @@ public class DetailInfo implements Serializable {
     /**
      * 直播码  url
      */
-    @Column(name = "DETAIL_ZBCODE", length = 100)
+    @Column(name = "DETAIL_ZBCODE", length = 2000)
     private String detailZbcode;
 
     /**

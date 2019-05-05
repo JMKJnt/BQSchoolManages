@@ -81,6 +81,12 @@ public class RegisterInfo implements Serializable {
     private String contentLevel;
 
     /**
+     * 成功模板
+     */
+    @Column(name = "ACTIVITY_TEMPLATE", length = 4000)
+    private String activityTemplate;
+
+    /**
      * 报名活动的 编码
      * 生成规则：适用年级编号（1位 活动表里有）+ 初高级编号（1 位 界面上会传）+ 期数编号（4位 活动表里有）+ 老师编号 （8位 用户表里32位id改装成8位短id）
      * 如：321892Gfjqh8nX
@@ -325,5 +331,13 @@ public class RegisterInfo implements Serializable {
 
     public void setRegisterNum(String registerNum) {
         this.registerNum = registerNum;
+    }
+
+    public String getActivityTemplate() {
+        return activityTemplate;
+    }
+
+    public void setActivityTemplate(String activityTemplate) {
+        this.activityTemplate = activityTemplate;
     }
 }

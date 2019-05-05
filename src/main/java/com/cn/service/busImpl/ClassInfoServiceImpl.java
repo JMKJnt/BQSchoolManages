@@ -287,14 +287,20 @@ public class ClassInfoServiceImpl implements ClassInfoService {
         JSONObject result = new JSONObject();
         JSONObject jo = new JSONObject(jsonstr);
         String className = jo.getString("className");//班级名称
-        String classSchool = jo.getString("classSchool");//学校名称
         String classTeacher = jo.getString("classTeacher");//班主任id
         String classDesc = jo.getString("classDesc");//班级描述
-        String classSchoolAddress = jo.getString("classSchoolAddress");//学校地址
         String classCreate = jo.getString("classCreate");//创建人
         String status = jo.getString("status");
-        String classLevel = jo.getString("classLevel");//班级级别
-        String classDivision = jo.getString("classDivision");//班级划分
+
+//        String classSchool = jo.getString("classSchool");//学校名称 数据库中存是学校ID
+        String classSchool = jo.has("classSchool") ? jo.getString("classSchool") : "";//学校名称 数据库中存是学校ID
+//        String classSchoolAddress = jo.getString("classSchoolAddress");//学校地址
+        String classSchoolAddress = jo.has("classSchoolAddress") ? jo.getString("classSchoolAddress") : "";//
+//        String classLevel = jo.getString("classLevel");//班级级别
+        String classLevel = jo.has("classLevel") ? jo.getString("classLevel") : "";//
+//        String classDivision = jo.getString("classDivision");//班级划分
+        String classDivision = jo.has("classDivision") ? jo.getString("classDivision") : "";//
+
         JSONArray paramJO = jo.getJSONArray("studentList");
         if (Utils.isEmpty(className) || Utils.isEmpty(classSchool) || Utils.isEmpty(classTeacher) ||
                 Utils.isEmpty(classDesc) || Utils.isEmpty(classSchoolAddress) || Utils.isEmpty(classCreate)
@@ -315,9 +321,9 @@ public class ClassInfoServiceImpl implements ClassInfoService {
                 classInfo.setClassLevel(classLevel);
                 classInfo.setClassDivision(classDivision);
                 //获取班级编号,根据选择的班级划分来显示首字母，如果
-                String headStr = classDivision.equals("1") ? "A" : classDivision.equals("2") ? "B" : classDivision.equals("3") ? "C" :
-                        classDivision.equals("4") ? "D" : classDivision.equals("5") ? "E" : classDivision.equals("6") ? "F" : "";
-                classInfo.setClassNum(CommonHelper.getRandomStr(headStr, 4));
+//                String headStr = classDivision.equals("1") ? "A" : classDivision.equals("2") ? "B" : classDivision.equals("3") ? "C" :
+//                        classDivision.equals("4") ? "D" : classDivision.equals("5") ? "E" : classDivision.equals("6") ? "F" : "";
+//                classInfo.setClassNum(CommonHelper.getRandomStr(headStr, 4));
                 classInfo.setClassCreateTime(new Date());
                 classInfo.setClassUpdateName(classCreate);
                 classInfo.setClassCreateTime(new Date());
