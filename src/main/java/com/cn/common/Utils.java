@@ -1,6 +1,9 @@
 package com.cn.common;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -78,5 +81,14 @@ public class Utils {
 		}
 		return shortBuffer.toString();
 
+	}
+	public static String Random_9NO() {
+		Random random = new Random();
+		String random_no = "";
+		for (int j = 0; j < 4; j++) {
+			random_no += random.nextInt(10);
+		}
+		String sdf = new SimpleDateFormat("HHSS").format(new Date());
+		return sdf+random_no;
 	}
 }

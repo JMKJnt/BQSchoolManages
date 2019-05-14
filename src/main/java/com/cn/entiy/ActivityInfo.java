@@ -73,7 +73,7 @@ public class ActivityInfo implements Serializable {
     /**
      * 适用年级 多选 1,2
      */
-    @Column(name = "ACTIVITY_CLASS_NUM", length = 10)
+    @Column(name = "ACTIVITY_CLASS_NUM", length = 100)
     private String activityClassNum;
 
     /**

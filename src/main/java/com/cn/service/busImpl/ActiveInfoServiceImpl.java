@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
 @Service
@@ -436,7 +437,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                 sql.append(" A.ACTIVITY_UPDATENAME,A.STATUS,A.ACTIVITY_NUMCY,A.ACTIVITY_SEQ FROM ACTIVITY_INFO A WHERE 1=1");
                 sql.append(strCommon.toString());
                 //是否人气排序 2 人气倒序 1 默认 顺序 3 报名时间降序
-                if (isNumCy.equals("1")) {
+                if (isNumCy.equals("")) {
                     sql.append(" ORDER BY A.ACTIVITY_SEQ  ");
                 } else if (isNumCy.equals("2")) {
                     //倒序
@@ -764,13 +765,14 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                 e.printStackTrace();
             }
         }
+        //logger.info("###########################"+result);
         return result;
     }
 
 
     /**
      * 新增报名活动信息
-     *
+     * ----老师报名的的功能接口
      * @param jsonstr
      * @return
      */
@@ -809,25 +811,25 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                     classCn.add(Restrictions.eq("classId", classId));
                     countClassS = baseEntityDao.countByCriteria(ClassStudentInfo.class, classCn, false);
                 }
-                if (userRole.contains("2") && countClassS < 1) {
-                    result.put(MsgAndCode.RSP_CODE, MsgAndCode.CODE_010);
-                    result.put(MsgAndCode.RSP_DESC, MsgAndCode.CODE_010_MSG);
-                    return result;
-                } else {
+//                if (userRole.contains("2") && countClassS < 1) {
+//                    result.put(MsgAndCode.RSP_CODE, MsgAndCode.CODE_010);
+//                    result.put(MsgAndCode.RSP_DESC, MsgAndCode.CODE_010_MSG);
+//                    return result;
+//                } else {
                     //取信息保存
                     //更新活动人气，每报名一个增加1个
                     ActivityInfo activityInfo = baseEntityDao.listById(ActivityInfo.class, activeId, false);
                     int count = Utils.isEmpty(activityInfo.getActivityNumCy()) ? 0 : Integer.parseInt(activityInfo.getActivityNumCy());
                     //判断如果身份是老师，则默认给所传班级底下未报名所有学生报名
-                    if (userRole.contains("2")) {
-                        //根据会员id查询班级信息
+                    if (userRole.contains("2") && countClassS!=0) {
+                        //根据会员id 和 班级id 查询班级下的 学生列表
                         StringBuffer sqlb = new StringBuffer("SELECT U.USER_ID,U.USER_NAME,U.USER_PHONE,U.USER_ROLETYPE FROM USER_INFO U ");
                         sqlb.append(" LEFT JOIN  CLASS_STUDENT_INFO CS ON CS.CLASS_STUDENT=U.USER_ID");
                         sqlb.append(" LEFT JOIN CLASS_INFO C ON C.CLASS_ID=CS.CLASS_ID ");
 //                        sqlb.append(" WHERE  NOT EXISTS (SELECT 'X' FROM ACTIVITY_REGISTER_INFO AR WHERE AR.REGISTER_USER_ID =CS.CLASS_STUDENT )");
                         sqlb.append(" WHERE  NOT EXISTS (SELECT 'X' FROM ACTIVITY_REGISTER_INFO AR WHERE AR.REGISTER_USER_ID =CS.CLASS_STUDENT AND AR.REGISTER_ACTIVITY_ID ='"+activeId+"' )");
                         sqlb.append(" AND C.CLASS_TEACHER='" + userId + "' AND CS.CLASS_ID='" + classId + "' ");
-                        logger.info("########根据会员id查询班级信息---sql-----" + sqlb);
+                        logger.info("########根据会员id和班级查询班级信息---sql-----" + sqlb);
                         List<Map<String, Object>> list = baseEntityDao.listBySQL(sqlb.toString(), false);
                         JSONArray arrayT = new JSONArray();
                         if (list != null && list.size() > 0) {
@@ -835,8 +837,8 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                             for (int i = 0; i < list.size(); i++) {
                                 Map<String, Object> map = list.get(i);
                                 //拼装本活动的编号
-                                //生成规则：适用年级编号（1位 活动表里有界面来参）+ 初高级编号（1 位 界面来参）+ 期数编号（4位 活动表里有 界面来参）+ 老师编号 （8位 用户表里32位id改装成8位短id）
-                                String registerNum=activityClassNum+contentLevel+activityHase+Utils.generateShortUuid(map.get("USER_ID").toString());
+                                //生成规则：适用年级编号（1位 活动表里有界面来参）+ 初高级编号（1 位 界面来参）+ 期数编号（4位 活动表里有 界面来参）+ 老师编号 （9位 用户表里32位id改装成8位短id）
+                                String registerNum=activityClassNum+contentLevel+activityHase+Utils.Random_9NO();
 
                                 RegisterInfo registerInfoT = new RegisterInfo();
                                 registerInfoT.setRegisterActivityId(activeId);
@@ -888,8 +890,8 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                     List<RegisterInfo> registerInfoList = baseEntityDao.listByCriteria(RegisterInfo.class, cn, false);
                     if (registerInfoList != null && registerInfoList.size() <= 0) {
                         //拼装本活动的编号
-                        //生成规则：适用年级编号（1位 活动表里有界面来参）+ 初高级编号（1 位 界面来参）+ 期数编号（4位 活动表里有 界面来参）+ 老师编号 （8位 用户表里32位id改装成8位短id）
-                        String registerNum=activityClassNum+contentLevel+activityHase+Utils.generateShortUuid(userId);
+                        //生成规则：适用年级编号（1位 活动表里有界面来参）+ 初高级编号（1 位 界面来参）+ 期数编号（4位 活动表里有 界面来参）+ 老师编号 （9位 用户表里32位id改装成8位短id）
+                        String registerNum=activityClassNum+contentLevel+activityHase+Utils.Random_9NO();
 
                         RegisterInfo registerInfo = new RegisterInfo();
                         registerInfo.setRegisterActivityId(activeId);
@@ -940,7 +942,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                         result.put(MsgAndCode.RSP_CODE, MsgAndCode.CODE_009);
                         result.put(MsgAndCode.RSP_DESC, MsgAndCode.CODE_009_MSG);
                     }
-                }
+//                }
 
             } catch (Exception e) {
                 result.put(MsgAndCode.RSP_CODE, MsgAndCode.CODE_002);
@@ -1590,7 +1592,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                 StringBuffer sql = new StringBuffer("SELECT D.DETAIL_ID,D.DETAIL_BANNER,D.CONTENT_LEVEL,D.DETAIL_CATE,D.DETAIL_DESC,D.DETAIL_ENDTIME,D.DETAIL_ISPUBLIC");
                 sql.append(",D.DETAIL_STARTTIME,D.DETAIL_ZBCODE ,D.DETAIL_THEME,D.DETAIL_TEACHERID FROM DETAIL_INFO D LEFT JOIN ACTIVITY_DETAIL_INFO AD ON D.DETAIL_ID=AD.DETAIL_ID ");
                 sql.append("  WHERE D.STATUS='1'  AND AD.ACTIVITY_ID='" + activeId + "'");
-                if (!contentLevel.equals("")) {
+                if (!contentLevel.equals("") && !contentLevel.equals("2")) {
                     sql.append(" AND D.CONTENT_LEVEL = '" + contentLevel + "'");
                 }
                 List<Map<String, Object>> detailInfoList = baseEntityDao.listBySQL(sql.toString(), false);

@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 
 @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
@@ -303,8 +304,8 @@ public class ClassInfoServiceImpl implements ClassInfoService {
 
         JSONArray paramJO = jo.getJSONArray("studentList");
         if (Utils.isEmpty(className) || Utils.isEmpty(classSchool) || Utils.isEmpty(classTeacher) ||
-                Utils.isEmpty(classDesc) || Utils.isEmpty(classSchoolAddress) || Utils.isEmpty(classCreate)
-                || Utils.isEmpty(status) || Utils.isEmpty(classLevel) || Utils.isEmpty(classDivision)) {
+                Utils.isEmpty(classDesc)  || Utils.isEmpty(classCreate)
+                || Utils.isEmpty(status) ) {
             result.put(MsgAndCode.RSP_CODE, MsgAndCode.CODE_001);
             result.put(MsgAndCode.RSP_DESC, MsgAndCode.CODE_001_MSG);
             return result;
@@ -489,6 +490,47 @@ public class ClassInfoServiceImpl implements ClassInfoService {
                         classStudentInfo.setClassCreateTime(new Date());
                         classStudentInfo.setStatus("1");
                         String resultStr = baseEntityDao.saveOrUpdate(classStudentInfo);
+
+
+                        Conjunction cn1 = Restrictions.conjunction();
+                        cn1.add(Restrictions.eq("registerUserId", classInfo.getClssTeacher()));
+                        cn1.add(Restrictions.eq("classId", classId));
+                        List<RegisterInfo> ri_list = baseEntityDao.listByCriteria(RegisterInfo.class, cn1, false);
+                        logger.info("*********************ceshi****"+ri_list.size());
+                        if(ri_list.size()!=0)
+                        {
+                            //遍历 此老师 下的班级 已经报名的活动，并授权给刚入班的此学生
+                            for(int i = 0; i < ri_list.size(); i++)
+                            {
+                                RegisterInfo registerInfo = ri_list.get(i);
+                                String registerNum_init=registerInfo.getRegisterNum();
+
+                                String registerNum=registerNum_init.substring(0,registerNum_init.length()-9)+Utils.Random_9NO();
+
+                                RegisterInfo registerInfoT = new RegisterInfo();
+                                registerInfoT.setRegisterActivityId(registerInfo.getRegisterActivityId());
+                                registerInfoT.setRegisterUserId(studentId);
+                                registerInfoT.setClassId(registerInfo.getClassId());//lzw
+                                registerInfoT.setRegisterSource(registerInfo.getRegisterSource());
+                                registerInfoT.setRegisterUserPhone(registerInfo.getRegisterUserPhone());
+                                registerInfoT.setRegisterUserName(registerInfo.getRegisterUserName());
+                                registerInfoT.setUserEmail(registerInfo.getUserEmail());
+                                registerInfoT.setContentLevel(registerInfo.getContentLevel());
+                                registerInfoT.setRegisterNum(registerNum);
+                                registerInfoT.setStatus(registerInfo.getStatus());// 1
+                                registerInfoT.setRegisterProgressStatus(registerInfo.getRegisterProgressStatus());//未参加 1 已参加，2 进行中，3未参加，4已过期
+                                registerInfoT.setRegisterApproveStatus(registerInfo.getRegisterApproveStatus());//待审核  1待审核 2 驳回 3 通过
+                                registerInfoT.setRegisterCreateName(createName);
+                                registerInfoT.setRegisterCreateTime(new Date());
+                                registerInfoT.setRegisterUpdateName(createName);
+                                registerInfoT.setRegisterUpdateTime(new Date());
+                                registerInfoT.setRegisterTime(new Date());//报名时间
+                                registerInfoT.setActivityTemplate(registerInfo.getActivityTemplate());//活动提示模板
+                                resultStr = baseEntityDao.saveOrUpdate(registerInfoT);
+                                //----------------------
+                            }
+                        }
+
                         if (resultStr.equals("success")) {
                             result.put(MsgAndCode.RSP_CODE, MsgAndCode.SUCCESS_CODE);
                             result.put(MsgAndCode.RSP_DESC, MsgAndCode.SUCCESS_MESSAGE);
