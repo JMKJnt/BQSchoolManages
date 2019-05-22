@@ -28,7 +28,7 @@ public class UserInfoController {
     @ResponseBody
     @RequestMapping(value = "/insertUserInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String insertUser(@RequestBody RequestBean bean) {
-        LogHelper.info("新增用户 请求参数：" + bean);
+//        LogHelper.info("新增用户 请求参数：" + bean);
         JSONObject result = new JSONObject();
         try {
             result = userInfoService.insertUser(bean.getJsonStr().toString());
@@ -49,7 +49,7 @@ public class UserInfoController {
     @ResponseBody
     @RequestMapping(value = "/updateUserInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String updateUser(@RequestBody RequestBean bean) {
-        LogHelper.info("修改用户 请求参数：" + bean.toString());
+//        LogHelper.info("修改用户 请求参数：" + bean.toString());
         JSONObject result = new JSONObject();
         try {
             result = userInfoService.updateUser(bean.getJsonStr().toString());
@@ -70,7 +70,7 @@ public class UserInfoController {
     @ResponseBody
     @RequestMapping(value = "/getUserInfoById", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String getUserInfo(@RequestBody RequestBean bean) {
-        LogHelper.info("获取用户信息 请求参数：" + bean.toString());
+//        LogHelper.info("获取用户信息 请求参数：" + bean.toString());
         JSONObject result = new JSONObject();
         try {
             result = userInfoService.getUserInfo(bean.getJsonStr().toString());
@@ -91,7 +91,7 @@ public class UserInfoController {
     @ResponseBody
     @RequestMapping(value = "/getUserInfoList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String getUserInfoList(@RequestBody RequestBean bean) {
-        LogHelper.info("获取用户列表 请求参数：" + bean.toString());
+//        LogHelper.info("获取用户列表 请求参数：" + bean.toString());
         JSONObject result = new JSONObject();
         try {
             result = userInfoService.getUserInfoList(bean.getJsonStr().toString());
@@ -112,7 +112,7 @@ public class UserInfoController {
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String login(@RequestBody RequestBean bean) {
-        LogHelper.info("用户登录（web，小程序） 请求参数：" + bean.toString());
+//        LogHelper.info("用户登录（web，小程序） 请求参数：" + bean.toString());
         JSONObject result = new JSONObject();
         try {
             result = userInfoService.login(bean.getJsonStr().toString());
@@ -133,7 +133,7 @@ public class UserInfoController {
     @ResponseBody
     @RequestMapping(value = "/insertUserManage", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String insertUserManage(@RequestBody RequestBean bean) {
-        LogHelper.info("新增管理员 请求参数：" + bean.toString());
+//        LogHelper.info("新增管理员 请求参数：" + bean.toString());
         JSONObject result = new JSONObject();
         try {
             result = userInfoService.insertUserManage(bean.getJsonStr().toString());
@@ -154,7 +154,7 @@ public class UserInfoController {
     @ResponseBody
     @RequestMapping(value = "/updateUserManage", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String updateUserManage(@RequestBody RequestBean bean) {
-        LogHelper.info("修改管理员请求参数：" + bean.toString());
+//        LogHelper.info("修改管理员请求参数：" + bean.toString());
         JSONObject result = new JSONObject();
         try {
             result = userInfoService.updateUserManage(bean.getJsonStr().toString());
@@ -175,7 +175,7 @@ public class UserInfoController {
     @ResponseBody
     @RequestMapping(value = "/getManageInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String getManage(@RequestBody RequestBean bean) {
-        LogHelper.info("获取管理员信息 请求参数：" + bean.toString());
+//        LogHelper.info("获取管理员信息 请求参数：" + bean.toString());
         JSONObject result = new JSONObject();
         try {
             result = userInfoService.getManage(bean.getJsonStr().toString());
@@ -196,7 +196,7 @@ public class UserInfoController {
     @ResponseBody
     @RequestMapping(value = "/getManageList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String getManageList(@RequestBody RequestBean bean) {
-        LogHelper.info("获取管理员列表 请求参数：" + bean.toString());
+//        LogHelper.info("获取管理员列表 请求参数：" + bean.toString());
         JSONObject result = new JSONObject();
         try {
             result = userInfoService.getManageList(bean.getJsonStr().toString());
@@ -217,7 +217,7 @@ public class UserInfoController {
     @ResponseBody
     @RequestMapping(value = "/loginManager", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String loginManager(@RequestBody RequestBean bean) {
-        LogHelper.info("管理员登录后台 请求参数：" + bean.toString());
+//        LogHelper.info("管理员登录后台 请求参数：" + bean.toString());
         JSONObject result = new JSONObject();
         try {
             result = userInfoService.loginManager(bean.getJsonStr().toString());
@@ -238,7 +238,7 @@ public class UserInfoController {
     @ResponseBody
     @RequestMapping(value = "/updatePassword", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String updatePassword(@RequestBody RequestBean bean) {
-        LogHelper.info("修改管理员密码 请求参数：" + bean.toString());
+//        LogHelper.info("修改管理员密码 请求参数：" + bean.toString());
         JSONObject result = new JSONObject();
         try {
             result = userInfoService.updatePassword(bean.getJsonStr().toString());
@@ -256,7 +256,7 @@ public class UserInfoController {
     @ResponseBody
     @RequestMapping(value = "/insertFamily", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String insertFamily(@RequestBody RequestBean bean){
-        LogHelper.info("新增家庭成员 insertFamily请求参数：" + bean.toString());
+//        LogHelper.info("新增家庭成员 insertFamily请求参数：" + bean.toString());
         JSONObject result = new JSONObject();
         try {
             result = userInfoService.insertFamily(bean.getJsonStr().toString());
@@ -274,7 +274,7 @@ public class UserInfoController {
     @ResponseBody
     @RequestMapping(value = "/updateFamily", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String updateFamily(@RequestBody RequestBean bean){
-        LogHelper.info("修改家庭成员 updateFamily请求参数：" + bean.toString());
+//        LogHelper.info("修改家庭成员 updateFamily请求参数：" + bean.toString());
         JSONObject result = new JSONObject();
         try {
             result = userInfoService.updateFamily(bean.getJsonStr().toString());
@@ -292,7 +292,7 @@ public class UserInfoController {
     @ResponseBody
     @RequestMapping(value = "/getFamilyInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String getFamilyInfo(@RequestBody RequestBean bean){
-        LogHelper.info("获取家庭成员 getFamilyInfo请求参数：" + bean.toString());
+//        LogHelper.info("获取家庭成员 getFamilyInfo请求参数：" + bean.toString());
         JSONObject result = new JSONObject();
         try {
             result = userInfoService.getFamilyInfo(bean.getJsonStr().toString());
@@ -311,7 +311,7 @@ public class UserInfoController {
     @ResponseBody
     @RequestMapping(value = "/getFamilyList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String getFamilyList(@RequestBody RequestBean bean){
-        LogHelper.info("获取家庭成员 getFamilyList请求参数：" + bean.toString());
+//        LogHelper.info("获取家庭成员 getFamilyList请求参数：" + bean.toString());
         JSONObject result = new JSONObject();
         try {
             result = userInfoService.getFamilyList(bean.getJsonStr().toString());

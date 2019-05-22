@@ -25,7 +25,7 @@ public class DictionaryController {
     @ResponseBody
     @RequestMapping(value = "/getDictionaryDataInfoList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String getBugsinessList(@RequestBody String jsonStr) {
-        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
+//        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
         String result = "";
         JSONObject resultJo = new JSONObject();
         try {
@@ -46,7 +46,7 @@ public class DictionaryController {
     @ResponseBody
     @RequestMapping(value = "/insertDictionaryDataInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String InsertDictionaryDataInfo(@RequestBody String jsonStr) {
-        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
+//        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
         String result = "";
         JSONObject resultJo = new JSONObject();
         try {
@@ -67,7 +67,7 @@ public class DictionaryController {
     @ResponseBody
     @RequestMapping(value = "/updateDictionaryDataInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String UpdateDictionaryDataInfo(@RequestBody String jsonStr) {
-        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
+//        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
         String result = "";
         JSONObject resultJo = new JSONObject();
         try {
@@ -88,7 +88,7 @@ public class DictionaryController {
     @ResponseBody
     @RequestMapping(value = "/getDictionaryInfoList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String GetDictionaryInfoList(@RequestBody String jsonStr) {
-        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
+//        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
         String result = "";
         JSONObject resultJo = new JSONObject();
         try {
@@ -109,7 +109,7 @@ public class DictionaryController {
     @ResponseBody
     @RequestMapping(value = "/insertDictionaryInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String InsertDictionaryInfo(@RequestBody String jsonStr) {
-        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
+//        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
         String result = "";
         JSONObject resultJo = new JSONObject();
         try {
@@ -130,7 +130,7 @@ public class DictionaryController {
     @ResponseBody
     @RequestMapping(value = "/updateDictionaryInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String UpdateDictionaryInfo(@RequestBody String jsonStr) {
-        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
+//        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
         String result = "";
         JSONObject resultJo = new JSONObject();
         try {
@@ -151,7 +151,7 @@ public class DictionaryController {
     @ResponseBody
     @RequestMapping(value = "/getDictionaryDataList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String GetDictionaryDataList(@RequestBody String jsonStr) {
-        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
+//        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
         String result = "";
         JSONObject resultJo = new JSONObject();
         try {
@@ -172,7 +172,7 @@ public class DictionaryController {
     @ResponseBody
     @RequestMapping(value = "/getDictionaryInfoByid", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String GetDictionaryInfoByid(@RequestBody String jsonStr) {
-        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
+//        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
         String result = "";
         JSONObject resultJo = new JSONObject();
         try {
@@ -193,7 +193,7 @@ public class DictionaryController {
     @ResponseBody
     @RequestMapping(value = "/getDictionaryDataInfoByid", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String GetDictionaryDataInfoByid(@RequestBody String jsonStr) {
-        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
+//        LogHelper.info("根据dataDictionary获取码表字表信息列表 请求参数：" + jsonStr);
         String result = "";
         JSONObject resultJo = new JSONObject();
         try {

@@ -39,7 +39,7 @@ public class wechatController {
     @ResponseBody
     @RequestMapping(value = "/getToken", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String getToken() {
-        LogHelper.info("新增活动 请求参数：");
+//        LogHelper.info("新增活动 请求参数：");
         JSONObject result = new JSONObject();
         try {
             JSONObject tokenObj = new JSONObject();
@@ -78,7 +78,7 @@ public class wechatController {
         obj.put("grant_type", "client_credential");
         String url = serverUrl + "/cgi-bin/token";
         JSONObject rejo = WebUtils.sendHttpGet(obj, url); //quanxianService.sendHttpPostFrom(beans, url, "请求数据查询订单状态信息接口嵩高");
-        LogHelper.info("获取token 请求参数：" + rejo.toString());
+//        LogHelper.info("获取token 请求参数：" + rejo.toString());
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.add(Calendar.HOUR, 2);//添加2个小时
@@ -99,7 +99,7 @@ public class wechatController {
     @ResponseBody
     @RequestMapping(value = "/getOpenId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String getOpenId(@RequestBody RequestBean bean) {
-        LogHelper.info("获取openID 请求参数：" + bean.getJsonStr());
+//        LogHelper.info("获取openID 请求参数：" + bean.getJsonStr());
         JSONObject result = new JSONObject();
         try {
             JSONObject obj = bean.getJsonStr();
@@ -131,7 +131,7 @@ public class wechatController {
     @ResponseBody
     @RequestMapping(value = "/sendMsgWechat", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String sendMsgWechat(@RequestBody RequestBean bean) {
-        LogHelper.info("发送模板信息 请求参数：" + bean.getJsonStr());
+//        LogHelper.info("发送模板信息 请求参数：" + bean.getJsonStr());
         JSONObject result = new JSONObject();
         try {
             JSONObject obj = bean.getJsonStr();

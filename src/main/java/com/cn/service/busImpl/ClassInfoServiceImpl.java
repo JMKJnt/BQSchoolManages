@@ -496,7 +496,6 @@ public class ClassInfoServiceImpl implements ClassInfoService {
                         cn1.add(Restrictions.eq("registerUserId", classInfo.getClssTeacher()));
                         cn1.add(Restrictions.eq("classId", classId));
                         List<RegisterInfo> ri_list = baseEntityDao.listByCriteria(RegisterInfo.class, cn1, false);
-                        logger.info("*********************ceshi****"+ri_list.size());
                         if(ri_list.size()!=0)
                         {
                             //遍历 此老师 下的班级 已经报名的活动，并授权给刚入班的此学生
@@ -505,7 +504,7 @@ public class ClassInfoServiceImpl implements ClassInfoService {
                                 RegisterInfo registerInfo = ri_list.get(i);
                                 String registerNum_init=registerInfo.getRegisterNum();
 
-                                String registerNum=registerNum_init.substring(0,registerNum_init.length()-9)+Utils.Random_9NO();
+                                String registerNum=registerNum_init.substring(0,registerNum_init.length()-5)+Utils.Random_5NO();
 
                                 RegisterInfo registerInfoT = new RegisterInfo();
                                 registerInfoT.setRegisterActivityId(registerInfo.getRegisterActivityId());

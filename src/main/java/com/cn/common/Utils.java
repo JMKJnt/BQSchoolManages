@@ -82,13 +82,13 @@ public class Utils {
 		return shortBuffer.toString();
 
 	}
-	public static String Random_9NO() {
+	public static String Random_5NO() {
 		Random random = new Random();
 		String random_no = "";
-		for (int j = 0; j < 4; j++) {
+		for (int j = 0; j < 5; j++) {
 			random_no += random.nextInt(10);
 		}
-		String sdf = new SimpleDateFormat("HHSS").format(new Date());
-		return sdf+random_no;
+//		String sdf = new SimpleDateFormat("MMSS").format(new Date());
+		return random_no;
 	}
 }

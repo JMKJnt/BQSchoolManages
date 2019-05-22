@@ -47,13 +47,15 @@ public class UserInfoServiceImpl implements UserInfoService {
         JSONObject result = new JSONObject();
         JSONObject jo = new JSONObject(jsonstr);
         String userName = jo.getString("userName");//用户名
+        String userCreate = jo.getString("userCreate");//创建人
+//        String userName = "用户"+Utils.Random_5NO();//用户名
+//        String userCreate = userName;//创建人
         String passWord = jo.getString("passWord");//base64加密处理
         String nickName = jo.has("nickName") ? jo.getString("nickName") : "";//用户昵称
         String userPhone = jo.getString("userPhone");//用户电话
         String userRole = jo.getString("userRole");//用户角色
         String userThird = jo.has("userThird") ? jo.getString("userThird") : "";//三方id
         String userWechatUnicon = jo.has("userWechatUnicon") ? jo.getString("userWechatUnicon") : "";//微信unionID
-        String userCreate = jo.getString("userCreate");//创建人
         String status = jo.getString("status");
         String classId = jo.has("classId") ? jo.getString("classId") : "";//班级ID
         String userEmail = jo.has("userEmail") ? jo.getString("userEmail") : "";

@@ -20,7 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 @Transactional(rollbackFor = {Exception.class, RuntimeException.class})
 @Service
@@ -445,7 +444,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                 } else if (isNumCy.equals("3")) {
                     sql.append(" ORDER BY A.ACTIVITY_SGIN_STARTTIME DESC ");
                 }
-                logger.info("sql=" + sql.toString());
+//                logger.info("sql=" + sql.toString());
                 List<Map<String, Object>> activityInfoList = baseEntityDao.listByPageBySQL(sql.toString(), Integer.parseInt(pageSize), Integer.parseInt(curragePage) - 1, false);
                 JSONArray array = new JSONArray();
                 if (activityInfoList != null && activityInfoList.size() > 0) {
@@ -559,7 +558,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                 sql.append("A.STATUS FROM ACTIVITY_INFO A  WHERE 1=1 ");
                 sql.append(strCommon.toString());
 
-                logger.info("sql=" + sql.toString());
+//                logger.info("sql=" + sql.toString());
                 List<Map<String, Object>> activityInfoList = baseEntityDao.listByPageBySQL(sql.toString(), Integer.parseInt(pageSize), Integer.parseInt(curragePage) - 1, false);
                 JSONArray array = new JSONArray();
                 if (activityInfoList != null && activityInfoList.size() > 0) {
@@ -669,7 +668,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                 if (!classId.equals("")) {
                     sqlC.append(" AND AR.CLASS_ID = '" + classId + "'");
                 }
-                logger.info("sql=" + sqlC.toString());
+//                logger.info("sql=" + sqlC.toString());
 
                 int total = baseEntityDao.CountBySQL(sqlC.toString());
 
@@ -711,7 +710,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                 if (!classId.equals("")) {
                     sqlL.append(" AND AR.CLASS_ID = '" + classId + "'");
                 }
-                logger.info("sql=" + sqlL.toString());
+//                logger.info("sql=" + sqlL.toString());
                 List<Map<String, Object>> activeRegisterList = baseEntityDao.listByPageBySQL(sqlL.toString(), Integer.parseInt(pageSize), Integer.parseInt(curragePage) - 1, false);
                 JSONArray array = new JSONArray();
                 if (activeRegisterList != null && activeRegisterList.size() > 0) {
@@ -803,6 +802,21 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
             return result;
         } else {
             try {
+                //转译年级 对应成 A B C D E F 代表 1-6年级
+                String activityClassNumT="Z";
+                if(activityClassNum.equals("1"))
+                {activityClassNumT="A";}
+                else if(activityClassNum.equals("2"))
+                {activityClassNumT="B";}
+                else if(activityClassNum.equals("3"))
+                {activityClassNumT="C"; }
+                else if(activityClassNum.equals("4"))
+                {activityClassNumT="D";}
+                else if(activityClassNum.equals("5"))
+                {activityClassNumT="E";}
+                else if(activityClassNum.equals("6"))
+                {activityClassNumT="F";}
+                else{activityClassNumT="Z";}
                 String resultStr = "";
                 //先判断如果用户角色为老师则查询班级学生数是否小于10人，小于10人返回错误
                 int countClassS = 0;
@@ -838,7 +852,8 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                                 Map<String, Object> map = list.get(i);
                                 //拼装本活动的编号
                                 //生成规则：适用年级编号（1位 活动表里有界面来参）+ 初高级编号（1 位 界面来参）+ 期数编号（4位 活动表里有 界面来参）+ 老师编号 （9位 用户表里32位id改装成8位短id）
-                                String registerNum=activityClassNum+contentLevel+activityHase+Utils.Random_9NO();
+
+                                String registerNum=activityClassNumT+contentLevel+activityHase+Utils.Random_5NO();
 
                                 RegisterInfo registerInfoT = new RegisterInfo();
                                 registerInfoT.setRegisterActivityId(activeId);
@@ -889,10 +904,7 @@ public class ActiveInfoServiceImpl implements ActiveInfoService {
                     cn.add(Restrictions.eq("registerActivityId", activeId));
                     List<RegisterInfo> registerInfoList = baseEntityDao.listByCriteria(RegisterInfo.class, cn, false);
                     if (registerInfoList != null && registerInfoList.size() <= 0) {
-                        //拼装本活动的编号
-                        //生成规则：适用年级编号（1位 活动表里有界面来参）+ 初高级编号（1 位 界面来参）+ 期数编号（4位 活动表里有 界面来参）+ 老师编号 （9位 用户表里32位id改装成8位短id）
-                        String registerNum=activityClassNum+contentLevel+activityHase+Utils.Random_9NO();
-
+                        String registerNum=activityClassNumT+contentLevel+activityHase+Utils.Random_5NO();
                         RegisterInfo registerInfo = new RegisterInfo();
                         registerInfo.setRegisterActivityId(activeId);
                         registerInfo.setRegisterUserId(userId);
